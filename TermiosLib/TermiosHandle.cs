@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Text;
 using TermiosLib.TermiosEnums;
 
 // TODO: Complete documentation in before next commit
