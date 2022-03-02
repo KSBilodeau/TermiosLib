@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <Title>Termios</Title>
@@ -11,12 +11,24 @@
         <RepositoryUrl>https://github.com/KangarooCoder/TermiosLib</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <PackageVersion>1.0.3</PackageVersion>
+        <PackageVersion>1.0.4</PackageVersion>
         <PackageReleaseNotes>Readme was missing in previous versions that were fixing other bugs.  Should be the last patch for a bit.</PackageReleaseNotes>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
     <ItemGroup>
-        <None Include="../README.md" Pack="true" PackagePath="\" />
-        <None Include="../LICENSE" Pack="true" PackagePath="\" />
+        <None Include="/Users/ksbilodeau/Documents/Programming Projects/RiderProjects/TermiosLib/README.md" Pack="true" PackagePath="\" />
+        <None Include="/Users/ksbilodeau/Documents/Programming Projects/RiderProjects/TermiosLib/LICENSE" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.1.0" />
     </ItemGroup>
 </Project>
