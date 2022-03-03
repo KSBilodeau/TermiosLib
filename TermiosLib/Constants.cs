@@ -101,7 +101,8 @@ public class Constants : System.Dynamic.DynamicObject
         Script<object> script = CSharpScript.Create(output.ToString(), ScriptOptions.Default);
 
         _vars = script.RunAsync()
-            .Result
+            .GetAwaiter()
+            .GetResult()
             .Variables
             .ToDictionary(variable => variable.Name, variable => (nuint)(uint)variable.Value);
     }

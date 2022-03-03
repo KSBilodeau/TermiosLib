@@ -9,44 +9,44 @@ namespace TermiosLib;
 public class TermiosHandle
 {
     [DllImport("libc", SetLastError = true)]
-    private static extern long read(long fileDes, out byte b, long count);
+    private static extern nint read(nuint fileDes, out byte b, nuint count);
 
     [DllImport("libc", SetLastError = true)]
-    private static extern long tcgetattr(long fileDes, out Termios termios);
+    private static extern nint tcgetattr(nuint fileDes, out Termios termios);
 
     [DllImport("libc", SetLastError = true)]
-    private static extern long tcsetattr(long fileDes, nuint optionalActions, in Termios termios);
+    private static extern nint tcsetattr(nuint fileDes, nuint optionalActions, in Termios termios);
 
     [DllImport("libc", SetLastError = true)]
-    private static extern long tcdrain(long fileDes);
+    private static extern nint tcdrain(nuint fileDes);
 
     [DllImport("libc", SetLastError = true)]
-    private static extern long tcflow(long fileDes, nuint action);
+    private static extern nint tcflow(nuint fileDes, nuint action);
 
     [DllImport("libc", SetLastError = true)]
-    private static extern long tcflush(long fileDes, nuint queueSelector);
+    private static extern nint tcflush(nuint fileDes, nuint queueSelector);
 
     [DllImport("libc", SetLastError = true)]
-    private static extern long tcgetsid(long fileDes);
+    private static extern nint tcgetsid(nuint fileDes);
 
     [DllImport("libc", SetLastError = true)]
-    private static extern long tcsendbreak(long fileDes, long duration);
+    private static extern nint tcsendbreak(nuint fileDes, nuint duration);
 
-    [DllImport("libc", SetLastError = true)]
-    private static extern void cfmakeraw(out Termios termios);
+    // [DllImport("libc", SetLastError = true)]
+    // private static extern void cfmakeraw(out Termios termios);
 
     private readonly dynamic _constants;
-    private readonly long _fileDes;
+    private readonly nuint _fileDes;
     private readonly Termios _termios;
 
-    private static readonly Dictionary<long, Termios> UsedFileDescriptors = new();
+    private static readonly Dictionary<nuint, Termios> UsedFileDescriptors = new();
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="fileDes">File descriptor of the TTY compliant device </param>
     /// <param name="termiosPath">Path to the location of the header containing Termios Constants</param>
-    public TermiosHandle(long fileDes, string termiosPath)
+    public TermiosHandle(nuint fileDes, string termiosPath)
     {
         _fileDes = fileDes;
 
@@ -97,7 +97,7 @@ public class TermiosHandle
     /// </summary>
     /// <param name="b"></param>
     /// <returns></returns>
-    public long ReadByte(out byte b)
+    public nint ReadByte(out byte b)
     {
         return read(_fileDes, out b, 1);
     }
@@ -174,7 +174,7 @@ public class TermiosHandle
     /// </summary>
     /// <returns></returns>
     /// <exception cref="Win32Exception"></exception>
-    public long GetProcessGroupId()
+    public nint GetProcessGroupId()
     {
         var result = tcgetsid(_fileDes);
         return result == -1 ? throw new Exception(Marshal.GetLastSystemError().ToString()) : result;
@@ -185,7 +185,7 @@ public class TermiosHandle
     /// </summary>
     /// <param name="duration"></param>
     /// <exception cref="Win32Exception"></exception>
-    public void SendBreak(long duration)
+    public void SendBreak(nuint duration)
     {
         if (tcsendbreak(_fileDes, duration) == -1)
             throw new Exception(Marshal.GetLastSystemError().ToString());
