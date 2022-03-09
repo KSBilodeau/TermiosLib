@@ -3,40 +3,37 @@ A C# wrapper of the renowned C Termios Library for the manipulation of terminal 
 
 See the man page for [<termios.h>](https://pubs.opengroup.org/onlinepubs/7908799/xsh/termios.h.html) for more information regarding the library itself.
 
+### Dependencies:
+
+[ExpressionEvaluator]()
+
+Thank you to CodingSeb for their fantastic ExpressionEvaluator library that allows for the quick evaluation of C Termios constants across all platforms.
+
 ### Example Program:
 
 ```c#
 using System;
 using TermiosLib;
-using TermiosLib.TermiosEnums;
 
-namespace Termios
+var termios = new TermiosHandle(0, "path/to/termios.h");
+var constants = termios.Constants;
+
+termios.StateSandbox(() =>
 {
-    internal static class Program
+    termios.ModifyGlobalAttrs((nuint)constants.TCSANOW, (ref Termios newState) =>
     {
-        public static void Main()
-        {
-            TermiosLib.Termios termios = new(0);
-            
-            termios.StateSandbox(() =>
-            {
-                termios.ModifyGlobalAttrs(OptionalActions.TcSaNow, (ref TermiosAttrs newState) =>
-                {
-                    newState.c_lflag &= ~(LocalFlags.ICanon | LocalFlags.IExten | LocalFlags.Echo | LocalFlags.ISig);
-                    newState.c_oflag &= ~OutputFlags.OPost;
-                    newState.c_cflag &= ControlFlags.Cs8;
-                    newState.c_iflag &= ~(InputFlags.IxOn | InputFlags.IStrip | InputFlags.ICrNl);
-                });
+        newState.c_lflag &= (nuint)~(constants.ICANON | constants.IEXTEN | constants.ECHO | constants.ISIG);
+        newState.c_oflag &= (nuint)~constants.OPOST;
+        newState.c_cflag &= (nuint)constants.CS8;
+        newState.c_iflag &= (nuint)~(constants.IXON | constants.ISTRIP | constants.ICRNL);
+    });
                 
-                System.IO.StreamWriter sw = new(Console.OpenStandardOutput()) {NewLine = "\r\n", AutoFlush = true};
-                while (termios.ReadByte(out var b) != -1 && b != 3)
-                {
-                    sw.WriteLine(b + $" ({(char) b})");
-                }
-            });
-        }
+    StreamWriter sw = new(Console.OpenStandardOutput()) {NewLine = "\r\n", AutoFlush = true};
+    while (termios.ReadByte(out var b) != -1 && b != 3)
+    {
+        sw.WriteLine(b + $" ({(char) b})");
     }
-}
+});
 ```
 
 ## Standard Defined Functions:
@@ -56,16 +53,16 @@ group process being orphaned.
 
 *Example:*
 ```c#
-GetAttrs(out TermiosAttrs termios);
+termios.GetAttrs(out Termios oldState);
 
 // This is for example purposes only. See ModifyGlobalAttrs(...) for why this is
 // should not be done like this.
-ModifyGlobalAttrs((ref TermiosAttrs newState) => {
-    newState = termios;
+termios.ModifyGlobalAttrs((nuint) constants.TCSANOW, (ref Termios newState) => {
+    newState = oldState;
 });
 ```
 
-#### [void ModifyGlobalAttrs(OptionalActions optionalActions, ModifyAction modify)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcsetattr.html)
+#### [void ModifyGlobalAttrs(nuint optionalActions, ModifyAction modify)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcsetattr.html)
 
 ModifyAction is defined as `delegate void ModifyAction(ref TermiosAttrs t)`
 
@@ -89,12 +86,12 @@ group process being orphaned
 
 *Example:*
 ```c#
-ModifyGlobalAttrs(OptionalActions.TcSaNow, (ref TermiosAttrs newState) =>
+termios.ModifyGlobalAttrs((nuint)constants.TCSANOW, (ref Termios newState) =>
 {
-    newState.c_lflag &= ~(LocalFlags.ICanon | LocalFlags.IExten | LocalFlags.Echo | LocalFlags.ISig);
-    newState.c_oflag &= ~OutputFlags.OPost;
-    newState.c_cflag &= ControlFlags.Cs8;
-    newState.c_iflag &= ~(InputFlags.IxOn | InputFlags.IStrip | InputFlags.ICrNl);
+    newState.c_lflag &= (nuint)~(constants.ICANON | constants.IEXTEN | constants.ECHO | constants.ISIG);
+    newState.c_oflag &= (nuint)~constants.OPOST;
+    newState.c_cflag &= (nuint)constants.CS8;
+    newState.c_iflag &= (nuint)~(constants.IXON | constants.ISTRIP | constants.ICRNL);
 });
 ```
 
@@ -111,7 +108,7 @@ system defines the terminal file descriptor as a number
 other than 0, or some strange business regarding the 
 group process being orphaned
 
-#### [void FlushOutput(LineCtrlFlags queueSelector)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcflush.html)
+#### [void FlushOutput(nuint queueSelector)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcflush.html)
 
 *Description:*
 
@@ -127,7 +124,7 @@ system defines the terminal file descriptor as a number
 other than 0, or some strange business regarding the 
 group process being orphaned.
 
-#### [long GetProcessGroupId()](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcgetsid.html)
+#### [nint GetProcessGroupId()](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcgetsid.html)
 
 *Description:*
 
@@ -139,7 +136,7 @@ Should not fail in under any circumstances unless the
 system defines the terminal file descriptor as a number
 other than 0.
 
-#### [void SendBreak(long duration)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcsendbreak.html)
+#### [void SendBreak(nuint duration)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcsendbreak.html)
 
 *Description:*
 
@@ -191,7 +188,7 @@ prior to calling.
 
 ## IEEE Defined Functions:
 
-#### [long ReadByte(out byte b)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/read.html)
+#### [nint ReadByte(out byte b)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/read.html)
 
 *Description:*
 
@@ -224,13 +221,14 @@ Will only fail if its internal GetAttrs or SetAttrs calls fail.
 ```c#
 using TermiosLib;
 
-TermiosHandle terminalHandle = new(0);
+var termios = new TermiosHandle(0, "path/to/termios.h");
+var constants = termios.Constants;
 
-terminalHandle.StateSandbox(() => {
+termios.StateSandbox(() => {
     // Reckless global termios modifications just for the fun of it
-    terminalHandle.EnableRaw();
-    terminalHandle.ModifyGlobalAttrs((ref TermiosLib.Termios newState) => {
-        newState.c_cflag &= ControlFlags.Cs7;
+    termios.EnableRaw();
+    termios.ModifyGlobalAttrs((ref TermiosLib.Termios newState) => {
+        newState.c_cflag &= (nuint)constants.Cs7;
     });
 });
 // No need to call termios.ResetTerm() because its already been reverted :)
@@ -252,20 +250,28 @@ Will only fail if its internal GetAttrs or SetAttrs calls fail.
 ```c#
 using TermiosLib;
 
-TermiosHandle terminalHandle = new(0);
+var termios = new TermiosHandle(0,
+    "/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/termios.h");
+var constants = termios.Constants;
 
-terminalHandle.FallbackOnFailure(() => {
-    newState.c_cflag &= ~ControlFlags.Cs8;
-    newState.c_cflag |= ControlFlags.Cs6;
-    // Something causes a failure
-    return false;
-}, 
-(ref TermiosLib.Termios newState) => {
-    newState.c_cflag &= ~ControlFlags.Cs8;
-    // This is ultimately the flag that gets set
-    newState.c_cflag |= ControlFlags.Cs7;
-});
-// No need to call termios.ResetTerm() because its already been reverted :)
+termios.FallbackOnFailure(() =>
+    {
+        termios.ModifyGlobalAttrs((nuint)constants.TCSANOW, (ref Termios oldState) =>
+        {
+            oldState.c_cflag &= (nuint)~constants.CS8;
+            oldState.c_cflag |= (nuint)constants.CS6;
+        });
+        
+        // Something causes a failure
+        return false;
+    },
+    (ref Termios newState) =>
+    {
+        newState.c_cflag &= (nuint)~constants.CS8;
+        // This is ultimately the flag that gets set
+        newState.c_cflag |= (nuint)constants.CS7;
+    }
+);
 ```
 
 #### string GlobalStateString()
