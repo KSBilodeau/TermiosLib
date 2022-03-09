@@ -7,20 +7,20 @@
         <Title>Termios</Title>
         <Authors>Keegan Bilodeau</Authors>
         <Description>A C# wrapper of the renowned C Termios Library for the manipulation of terminal interfaces in a manner defined by POSIX. This library can be used for all serial devices that implement TTY, and or simulate it in one way or another.</Description>
-        <Copyright>Copyright (c) 2021 Keegan Sean Bilodeau</Copyright>
+        <Copyright>Copyright (c) 2022 Keegan Sean Bilodeau</Copyright>
         <RepositoryUrl>https://github.com/KangarooCoder/TermiosLib</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <PackageVersion>1.0.4</PackageVersion>
-        <PackageReleaseNotes>Readme was missing in previous versions that were fixing other bugs.  Should be the last patch for a bit.</PackageReleaseNotes>
+        <PackageVersion>2.0.0</PackageVersion>
+        <PackageReleaseNotes>Introducing TermiosLib 2.0.0! This time, the library is actually cross platform.  Utilizing the new constants class and the path to your nearest Termios header, you can get access to all of the precious constants you could want regardless of their POSIX definition status.  This is brought to you in part by the hard word of CodingSeb and their amazing ExpressionEvaluator library.</PackageReleaseNotes>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
@@ -30,6 +30,5 @@
 
     <ItemGroup>
       <PackageReference Include="CodingSeb.ExpressionEvaluator" Version="1.4.37" />
-      <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.1.0" />
     </ItemGroup>
 </Project>

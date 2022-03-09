@@ -1,16 +1,24 @@
 ﻿using TermiosLib;
 
-var handle = new TermiosHandle(0, "/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/termios.h");
+var termios = new TermiosHandle(0,
+    "/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/termios.h");
+var constants = termios.Constants;
 
-handle.StateSandbox(() =>
-{
-    handle.EnableRaw();
-    
-    while (handle.ReadByte(out var b) != -1)
+termios.FallbackOnFailure(() =>
     {
-        Console.Write(b + "\r\n");
-        Console.Out.Flush();
+        termios.ModifyGlobalAttrs((nuint)constants.TCSANOW, (ref Termios oldState) =>
+        {
+            oldState.c_cflag &= (nuint)~constants.CS8;
+            oldState.c_cflag |= (nuint)constants.CS6;
+        });
+        
+        // Something causes a failure
+        return false;
+    },
+    (ref Termios newState) =>
+    {
+        newState.c_cflag &= (nuint)~constants.CS8;
+        // This is ultimately the flag that gets set
+        newState.c_cflag |= (nuint)constants.CS7;
     }
-});
-
-Console.WriteLine("SUCCESS");
+);

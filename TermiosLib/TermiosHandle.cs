@@ -31,11 +31,8 @@ public class TermiosHandle
 
     [DllImport("libc", SetLastError = true)]
     private static extern nint tcsendbreak(nuint fileDes, nuint duration);
-
-    // [DllImport("libc", SetLastError = true)]
-    // private static extern void cfmakeraw(out Termios termios);
-
-    private readonly dynamic _constants;
+    
+    public readonly dynamic Constants;
     private readonly nuint _fileDes;
     private readonly Termios _termios;
 
@@ -58,7 +55,7 @@ public class TermiosHandle
             UsedFileDescriptors.Add(fileDes, _termios);
         }
 
-        _constants = new Constants(termiosPath);
+        Constants = new Constants(termiosPath);
     }
 
     /// <summary>
@@ -68,20 +65,20 @@ public class TermiosHandle
     {
         GetAttrs(out Termios newState);
 
-        newState.c_iflag &= (nuint)~(_constants.IMAXBEL | _constants.IXOFF | _constants.INPCK | _constants.BRKINT |
-                                     _constants.PARMRK | _constants.ISTRIP | _constants.INLCR | _constants.IGNCR |
-                                     _constants.ICRNL | _constants.IXON | _constants.IGNPAR);
-        newState.c_iflag |= (nuint)_constants.IGNBRK;
-        newState.c_oflag &= (nuint)~_constants.OPOST;
-        newState.c_lflag &= (nuint)~(_constants.ECHO | _constants.ECHOE | _constants.ECHOK | _constants.ECHONL |
-                                     _constants.ICANON | _constants.ISIG | _constants.IEXTEN | _constants.NOFLSH |
-                                     _constants.TOSTOP | _constants.PENDIN);
-        newState.c_cflag &= (nuint)~(_constants.CSIZE | _constants.PARENB);
-        newState.c_cflag |= (nuint)(_constants.CS8 | _constants.CREAD);
-        newState.c_cc[(nuint)_constants.VMIN] = 1;
-        newState.c_cc[(nuint)_constants.VTIME] = 0;
+        newState.c_iflag &= (nuint)~(Constants.IMAXBEL | Constants.IXOFF | Constants.INPCK | Constants.BRKINT |
+                                     Constants.PARMRK | Constants.ISTRIP | Constants.INLCR | Constants.IGNCR |
+                                     Constants.ICRNL | Constants.IXON | Constants.IGNPAR);
+        newState.c_iflag |= (nuint)Constants.IGNBRK;
+        newState.c_oflag &= (nuint)~Constants.OPOST;
+        newState.c_lflag &= (nuint)~(Constants.ECHO | Constants.ECHOE | Constants.ECHOK | Constants.ECHONL |
+                                     Constants.ICANON | Constants.ISIG | Constants.IEXTEN | Constants.NOFLSH |
+                                     Constants.TOSTOP | Constants.PENDIN);
+        newState.c_cflag &= (nuint)~(Constants.CSIZE | Constants.PARENB);
+        newState.c_cflag |= (nuint)(Constants.CS8 | Constants.CREAD);
+        newState.c_cc[(nuint)Constants.VMIN] = 1;
+        newState.c_cc[(nuint)Constants.VTIME] = 0;
 
-        SetAttrs((nuint)_constants.TCSANOW, in newState);
+        SetAttrs((nuint)Constants.TCSANOW, in newState);
     }
 
     /// <summary>
@@ -89,7 +86,7 @@ public class TermiosHandle
     /// </summary>
     public void ResetTerm()
     {
-        SetAttrs((nuint)_constants.TCSANOW, in _termios);
+        SetAttrs((nuint)Constants.TCSANOW, in _termios);
     }
 
     /// <summary>
@@ -204,7 +201,7 @@ public class TermiosHandle
     {
         GetAttrs(out Termios termios);
         function();
-        SetAttrs((nuint)_constants.TCSANOW, in termios);
+        SetAttrs((nuint)Constants.TCSANOW, in termios);
     }
 
     /// <summary>
@@ -217,8 +214,8 @@ public class TermiosHandle
         GetAttrs(out Termios termios);
         if (!predicate())
         {
-            SetAttrs((nuint)_constants.TCSANOW, in termios);
-            ModifyGlobalAttrs((nuint)_constants.TCSANOW, fallbackState);
+            SetAttrs((nuint)Constants.TCSANOW, in termios);
+            ModifyGlobalAttrs((nuint)Constants.TCSANOW, fallbackState);
         }
     }
 
@@ -230,7 +227,7 @@ public class TermiosHandle
     {
         GetAttrs(out Termios prevState);
         if (!predicate())
-            SetAttrs((nuint)_constants.TCSANOW, in prevState);
+            SetAttrs((nuint)Constants.TCSANOW, in prevState);
     }
 
     /// <summary>
