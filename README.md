@@ -37,7 +37,7 @@ termios.StateSandbox(() =>
 ```
 
 ## Standard Defined Functions:
-#### [void GetAttrs(out TermiosAttrs termios)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcgetattr.html)
+#### [void GetAttrs(out Termios termios)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcgetattr.html)
 
 *Description:*
 
@@ -64,7 +64,7 @@ termios.ModifyGlobalAttrs((nuint) constants.TCSANOW, (ref Termios newState) => {
 
 #### [void ModifyGlobalAttrs(nuint optionalActions, ModifyAction modify)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcsetattr.html)
 
-ModifyAction is defined as `delegate void ModifyAction(ref TermiosAttrs t)`
+ModifyAction is defined as `delegate void ModifyAction(ref Termios t)`
 
 
 Due to calling `tcsetattr(int, int, struct termios*)` before `tcgetattr(int, struct termios*)`
@@ -74,7 +74,7 @@ Just call the function by itself.
 *Description:*
 
 Sets the global state of termios through the C# managed
-TermiosAttrs struct 
+Termios struct 
 
 *Failure cases:*
 

@@ -11,8 +11,9 @@
         <RepositoryUrl>https://github.com/KangarooCoder/TermiosLib</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <PackageVersion>2.0.0</PackageVersion>
-        <PackageReleaseNotes>Introducing TermiosLib 2.0.0! This time, the library is actually cross platform.  Utilizing the new constants class and the path to your nearest Termios header, you can get access to all of the precious constants you could want regardless of their POSIX definition status.  This is brought to you in part by the hard word of CodingSeb and their amazing ExpressionEvaluator library.</PackageReleaseNotes>
+        <PackageVersion>2.0.1</PackageVersion>
+        <PackageReleaseNotes>Introducing TermiosLib 2.0.0! This time, the library is actually cross platform.  Utilizing the new constants class and the path to your nearest Termios header, you can get access to all of the precious constants you could want regardless of their POSIX definition status.  This is brought to you in part by the hard work of CodingSeb and their amazing ExpressionEvaluator library. (I accidentally uploaded the debug build last release. Please update for maximum performance.)</PackageReleaseNotes>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
