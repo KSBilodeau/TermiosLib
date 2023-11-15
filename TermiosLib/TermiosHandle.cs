@@ -171,8 +171,6 @@ namespace TermiosLib
             GetAttrs(out Termios termios);
             modify(ref termios);
             SetAttrs(optionalActions, in termios);
-            GetAttrs(out termios);
-            Console.WriteLine(termios.c_cflag + "\r");
         }
 
         /// <summary>
@@ -295,7 +293,7 @@ namespace TermiosLib
             GetAttrs(out Termios termios);
             if (!predicate())
             {
-                // SetAttrs(OptionalActions.TcSaNow, in termios);
+                SetAttrs(OptionalActions.TcSaNow, in termios);
                 ModifyGlobalAttrs(OptionalActions.TcSaNow, fallbackState);
             }
         }
