@@ -11,7 +11,7 @@
         <RepositoryUrl>https://github.com/KangarooCoder/TermiosLib</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <PackageVersion>1.0.1</PackageVersion>
+        <PackageVersion>1.0.2</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>
