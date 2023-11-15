@@ -11,7 +11,8 @@
         <RepositoryUrl>https://github.com/KangarooCoder/TermiosLib</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <PackageVersion>1.0.2</PackageVersion>
+        <PackageVersion>1.0.3</PackageVersion>
+        <PackageReleaseNotes>Readme was missing in previous versions that were fixing other bugs.  Should be the last patch for a bit.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
