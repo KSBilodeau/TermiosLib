@@ -1,5 +1,4 @@
-﻿
-using TermiosLib;
+﻿using TermiosLib;
 
 var handle = new TermiosHandle(0, "/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/termios.h");
 

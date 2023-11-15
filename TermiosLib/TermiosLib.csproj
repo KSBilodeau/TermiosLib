@@ -29,6 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="CodingSeb.ExpressionEvaluator" Version="1.4.37" />
       <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.1.0" />
     </ItemGroup>
 </Project>
