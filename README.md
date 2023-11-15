@@ -282,11 +282,12 @@ May fail if the internal GetAttrs call fails.
 #### string OriginalStateString()
 
 *Description:*
-```
+
 Returns a formatted string of the struct that represents 
 the the global termios struct as it was at the beginning
 of the program.
 
+*Failure Cases:*
+
 If the constructor for the file descriptor succeeds,
 then this function is guaranteed to never fail.
-```
