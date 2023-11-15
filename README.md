@@ -3,6 +3,12 @@ A C# wrapper of the renowned C Termios Library for the manipulation of terminal 
 
 See the man page for [<termios.h>](https://pubs.opengroup.org/onlinepubs/7908799/xsh/termios.h.html) for more information regarding the library itself.
 
+### Dependencies:
+
+[ExpressionEvaluator]()
+
+Thank you to CodingSeb for their fantastic ExpressionEvaluator library that allows for the quick evaluation of C Termios constants across all platforms.
+
 ### Example Program:
 
 ```c#
