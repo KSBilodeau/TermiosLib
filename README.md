@@ -1,9 +1,9 @@
-# <div style="text-align: center">TermiosLib</div>
+# TermiosLib
 A C# wrapper of the renowned C Termios Library for the manipulation of terminal interfaces in a manner defined by POSIX. This library can be used for all serial devices that implement TTY, and or simulate it in one way or another.
 
 See the man page for [<termios.h>](https://pubs.opengroup.org/onlinepubs/7908799/xsh/termios.h.html) for more information regarding the library itself.
 
-### <div style="text-align: center">Example Program:</div>
+### Example Program:
 
 ```c#
 using System;
@@ -39,19 +39,20 @@ namespace Termios
 }
 ```
 
-## <div style="text-align: center">Standard Defined Functions:</div>
+## Standard Defined Functions:
 #### [void GetAttrs(out TermiosAttrs termios)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcgetattr.html)
 
 *Description:*
-```
+
 Returns the current global termios state in the 
-C# managed struct through out
+C# managed struct through out.
+
+*Failure cases:*
 
 Should not fail in under any circumstances unless the
 system defines the terminal file descriptor as a number
 other than 0, or some strange business regarding the 
-group process being orphaned
-```
+group process being orphaned.
 
 *Example:*
 ```c#
@@ -70,21 +71,21 @@ ModifyAction is defined as `delegate void ModifyAction(ref TermiosAttrs t)`
 
 
 Due to calling `tcsetattr(int, int, struct termios*)` before `tcgetattr(int, struct termios*)`
-being undefined, this function will always call `GetAttrs(...)` internally.
-
-Hence, it is almost always unnecessary to call `GetAttrs(...)` before `ModifyGlobalAttrs(...)` (especially with the extended lib functions).
+being undefined, this function will always call `GetAttrs(...)` internally. Hence, it is almost always unnecessary to call `GetAttrs(...)` before `ModifyGlobalAttrs(...)` (especially with the extended lib functions).
 Just call the function by itself.
 
 *Description:*
-```
+
 Sets the global state of termios through the C# managed
-TermiosAttrs sturct 
+TermiosAttrs struct 
+
+*Failure cases:*
 
 Should not fail in under any circumstances unless the
 system defines the terminal file descriptor as a number
 other than 0, or some strange business regarding the 
 group process being orphaned
-```
+
 
 *Example:*
 ```c#
@@ -100,54 +101,58 @@ ModifyGlobalAttrs(OptionalActions.TcSaNow, (ref TermiosAttrs newState) =>
 #### [void DrainOutput()](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcdrain.html)
 
 *Description:*
-```
+
 Waits for all output to be sent to the serial device
+
+*Failure cases:*
 
 Should not fail in under any circumstances unless the
 system defines the terminal file descriptor as a number
 other than 0, or some strange business regarding the 
 group process being orphaned
-```
 
 #### [void FlushOutput(LineCtrlFlags queueSelector)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcflush.html)
 
 *Description:*
-```
+
 Discards data written to the object referred to by 
 the file descriptor but not transmitted, or 
-data recieved but not read depending on the value
-of queue selector
+data received but not read depending on the value
+of queue selector.
 
-Should not fail in under any circumstances unless the
+*Failure cases:*
+
+Should not fail under any circumstances unless the
 system defines the terminal file descriptor as a number
 other than 0, or some strange business regarding the 
-group process being orphaned
-```
+group process being orphaned.
 
 #### [long GetProcessGroupId()](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcgetsid.html)
 
 *Description:*
-```
+
+Returns the group process id for the terminal.
+
+*Failure cases:*
+
 Should not fail in under any circumstances unless the
 system defines the terminal file descriptor as a number
-other than 0
-```
+other than 0.
 
 #### [void SendBreak(long duration)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/tcsendbreak.html)
 
 *Description:*
-```
+
 Will initiate the transmission of zero-valued bits for a specified duration,
 which for a duration of zero is between 0.25 and 0.5 seconds and for durations
 greater than zero it is implementation defined
 
-Should not fail in under any circumstances unless the
-system defines the terminal file descriptor as a number
-other than 0, or some strange business regarding the 
-group process being orphaned
-```
+*Failure cases:*
 
-## <div style="text-align: center">Non-POSIX Functions:</div>
+Should not fail under any circumstances unless the system defines the terminal file descriptor as a number other than 0, or some strange business regarding the 
+group process being orphaned
+
+## Non-POSIX Functions:
 
 #### [void EnableRaw()](https://linux.die.net/man/3/cfmakeraw)
 
@@ -155,12 +160,11 @@ Related to the function `cfmakeraw(3)` defined on certain systems
 that enables flags that enables raw input.
 
 *Description:*
-```
-Disables the ICANON, IEXTEN, ECHO, ISIG, OPOST, IXON, ISTRIP, and ICRNL flags 
-and enables the CS8 flag in order to redirect all input to stdin in 8 bit bytes.
+Disables the ICANON, IEXTEN, ECHO, ISIG, OPOST, IXON, ISTRIP, and ICRNL flags and enables the CS8 flag in order to redirect all input to stdin in 8 bit bytes.
+
+*Failure cases:*
 
 This function fails only if the underlying GetAttrs and SetAttrs calls fail.
-```
 
 #### [void ResetTerm()](https://www.freebsd.org/cgi/man.cgi?query=cfmakesane&apropos=0&sektion=3&manpath=FreeBSD+7-current&format=html)
 
@@ -169,12 +173,12 @@ that reverts the global termios flags to a state similar to a newly created
 terminal device.
 
 *Description:*
-```
-Retunrs the terminal to the state it was in at the time of the *orginal* 
-constructor call for any specified file descriptor.
+
+Returns the terminal to the state it was in at the time of the *original* constructor call for any specified file descriptor.
+
+*Failure cases:*
 
 This function fails only if the underlying SetAttrs call fails.
-```
 
 *Extended Mechanics Explanation:*
 
@@ -185,22 +189,23 @@ to all future instances of a Termios struct with the same file descriptor.
 This guarantees that the behavior of `ResetTerm()` is the same irregardless of any action taken upon the struct
 prior to calling.
 
-## <div style="text-align: center">IEEE Defined Functions:</div>
+## IEEE Defined Functions:
 
 #### [long ReadByte(out byte b)](https://pubs.opengroup.org/onlinepubs/7908799/xsh/read.html)
 
 *Description:*
-```
+
 Reads in a single byte from stdin, returning through out with b.  Intended for use 
 when Termios raw mode is enabled as it causes Console.Read() to work in an fashion
 that may not be expected or desirable.
 
+*Failure cases:*
+
 Failure is NOT handled in the library, so it is necessary to make sure that
 the return value of the function is not -1.  Errno may be queried through 
 Marshal.GetLastWin32Error() regardless of operating system
-```
 
-## <div style="text-align: center">Wrapper Specific Functions:</div>
+## Wrapper Specific Functions:
 
 The following functions are not implemented out of necessity in regards to any specific
 standard or library, but rather out of convenience for those who will use this library.
@@ -208,13 +213,12 @@ standard or library, but rather out of convenience for those who will use this l
 #### void StateSandbox(Action function)
 
 *Description:*
-```
-Given a function, StateSandbox will execute it in a way that reverts the global
-termios state to what it was prior to calling the function, regardless of what 
-occurs within the passed function. 
+
+Given a function, StateSandbox will execute it in a way that reverts the global termios state to what it was prior to calling the function, regardless of what occurs within the passed function. 
+
+*Failure Cases:*
 
 Will only fail if its internal GetAttrs or SetAttrs calls fail.
-```
 
 *Examples:*
 ```c#
@@ -235,13 +239,14 @@ terminalHandle.StateSandbox(() => {
 #### void FallbackOnFailure(Func<bool> predicate, ModifyAction fallbackState)
 
 *Description:*
-```
+
 Given a function that returns a bool, if the function fails (denoted by a return
 value of false), then the global state will reflect whatever flags are set in the
 fallback state.
 
+*Failure cases:*
+
 Will only fail if its internal GetAttrs or SetAttrs calls fail.
-```
 
 *Examples:*
 ```c#
@@ -266,12 +271,13 @@ terminalHandle.FallbackOnFailure(() => {
 #### string GlobalStateString()
 
 *Description:*
-```
+
 Returns a formatted string of the struct that represents 
 the current global termios struct.
 
+*Failure cases:*
+
 May fail if the internal GetAttrs call fails.
-```
 
 #### string OriginalStateString()
 
